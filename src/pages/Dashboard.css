@@ -80,6 +80,8 @@
   flex-direction: column;
   gap: 4px;
   padding: 0 16px;
+  position: fixed;
+  width: 250px;
 }
 
 .nav-item {
@@ -633,12 +635,14 @@
     border-right: none;
     border-bottom: 1px solid var(--border-color);
     padding: 16px 0;
+    height: 78px;
   }
 
   .sidebar-nav {
     flex-direction: row;
     overflow-x: auto;
     padding: 0 16px;
+    width: 100%;
   }
 
   .nav-item {

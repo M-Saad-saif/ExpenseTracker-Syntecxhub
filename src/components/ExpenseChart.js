@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -8,9 +8,9 @@ import {
   Tooltip,
   Legend,
   ArcElement,
-} from 'chart.js';
-import { Bar, Pie } from 'react-chartjs-2';
-import './ExpenseChart.css';
+} from "chart.js";
+import { Bar, Pie } from "react-chartjs-2";
+import "./ExpenseChart.css";
 
 // Register ChartJS components
 ChartJS.register(
@@ -20,7 +20,7 @@ ChartJS.register(
   Title,
   Tooltip,
   Legend,
-  ArcElement
+  ArcElement,
 );
 
 const ExpenseChart = ({ expensesByCategory, incomesByCategory }) => {
@@ -32,22 +32,22 @@ const ExpenseChart = ({ expensesByCategory, incomesByCategory }) => {
     labels: expenseCategories,
     datasets: [
       {
-        label: 'Expenses by Category',
+        label: "Expenses by Category",
         data: expenseAmounts,
         backgroundColor: [
-          '#FF6384',
-          '#36A2EB',
-          '#FFCE56',
-          '#4BC0C0',
-          '#9966FF',
-          '#FF9F40',
-          '#FF6384',
-          '#C9CBCF',
-          '#4BC0C0',
-          '#FF6384',
-          '#36A2EB',
+          "#FF6384",
+          "#36A2EB",
+          "#FFCE56",
+          "#4BC0C0",
+          "#9966FF",
+          "#FF9F40",
+          "#FF6384",
+          "#C9CBCF",
+          "#4BC0C0",
+          "#FF6384",
+          "#36A2EB",
         ],
-        borderColor: '#fff',
+        borderColor: "#fff",
         borderWidth: 2,
       },
     ],
@@ -61,47 +61,45 @@ const ExpenseChart = ({ expensesByCategory, incomesByCategory }) => {
     labels: incomeCategories,
     datasets: [
       {
-        label: 'Income by Category',
+        label: "Income by Category",
         data: incomeAmounts,
         backgroundColor: [
-          '#4CAF50',
-          '#8BC34A',
-          '#CDDC39',
-          '#FFC107',
-          '#FF9800',
-          '#FF5722',
-          '#795548',
+          "#4CAF50",
+          "#8BC34A",
+          "#CDDC39",
+          "#FFC107",
+          "#FF9800",
+          "#FF5722",
+          "#795548",
         ],
-        borderColor: '#fff',
+        borderColor: "#fff",
         borderWidth: 2,
       },
     ],
   };
 
   // Prepare data for Bar Chart (Comparison)
-  const allCategories = [...new Set([...expenseCategories, ...incomeCategories])];
-  const expenseData = allCategories.map(
-    (cat) => expensesByCategory[cat] || 0
-  );
-  const incomeData = allCategories.map(
-    (cat) => incomesByCategory[cat] || 0
-  );
+  const allCategories = [
+    ...new Set([...expenseCategories, ...incomeCategories]),
+  ];
+  const expenseData = allCategories.map((cat) => expensesByCategory[cat] || 0);
+  const incomeData = allCategories.map((cat) => incomesByCategory[cat] || 0);
 
   const barData = {
     labels: allCategories,
     datasets: [
       {
-        label: 'Income',
+        label: "Income",
         data: incomeData,
-        backgroundColor: '#4CAF50',
-        borderColor: '#388E3C',
+        backgroundColor: "#4CAF50",
+        borderColor: "#388E3C",
         borderWidth: 1,
       },
       {
-        label: 'Expenses',
+        label: "Expenses",
         data: expenseData,
-        backgroundColor: '#FF6384',
-        borderColor: '#E53935',
+        backgroundColor: "#FF6384",
+        borderColor: "#E53935",
         borderWidth: 1,
       },
     ],
@@ -112,12 +110,22 @@ const ExpenseChart = ({ expensesByCategory, incomesByCategory }) => {
     maintainAspectRatio: true,
     plugins: {
       legend: {
-        position: 'top',
+        position: "top",
       },
       tooltip: {
         callbacks: {
           label: function (context) {
-            return `${context.label}: $${context.parsed.toFixed(2)}`;
+            let value;
+
+            if (typeof context.parsed === "object") {
+              value = context.parsed.y;
+            } else {
+              value = context.parsed;
+            }
+
+            const numericValue =
+              typeof value === "number" && !isNaN(value) ? value : 0;
+            return `${context.label}: $${numericValue.toFixed(2)}`;
           },
         },
       },
@@ -129,12 +137,12 @@ const ExpenseChart = ({ expensesByCategory, incomesByCategory }) => {
     maintainAspectRatio: true,
     plugins: {
       legend: {
-        position: 'right',
+        position: "right",
       },
       tooltip: {
         callbacks: {
           label: function (context) {
-            const label = context.label || '';
+            const label = context.label || "";
             const value = context.parsed || 0;
             return `${label}: $${value.toFixed(2)}`;
           },
@@ -181,7 +189,8 @@ const ExpenseChart = ({ expensesByCategory, incomesByCategory }) => {
 
       {expenseCategories.length === 0 && incomeCategories.length === 0 && (
         <p className="no-chart-data">
-          No data available for charts. Add some expenses or income to see visualizations.
+          No data available for charts. Add some expenses or income to see
+          visualizations.
         </p>
       )}
     </div>
