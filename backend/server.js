@@ -7,7 +7,7 @@ const { notFound, errorHandler } = require("./middleware/errorMiddleware");
 const path = require("path");
 require("dotenv").config({ path: path.join(__dirname, ".env") });
 dotenv.config();
-require('./config/cloudinary')
+require("./config/cloudinary");
 
 connectDB();
 const app = express();
@@ -16,12 +16,29 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// CORS configuration
+const allowedOrigins = [
+  "https://expense-tracker-five-fawn.vercel.app",
+  "http://localhost:3000",
+];
+
 app.use(
   cors({
-    origin: "https://expense-tracker-five-fawn.vercel.app" || "http://localhost:3000",
+    origin: (origin, callback) => {
+      if (!origin) {
+        return callback(null, true);
+      }
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+      return callback(new Error(`CORS blocked for origin: ${origin}`), false);
+    },
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
-    allowedHeaders: ["Content-Type", "Authorization"],
+    allowedHeaders: [
+      "Content-Type",
+      "Authorization",
+      "authorization",
+      "Accept",
+    ],
   }),
 );
 
