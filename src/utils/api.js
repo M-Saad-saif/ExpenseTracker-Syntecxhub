@@ -4,7 +4,7 @@ import axios from "axios";
 // Create axios instance
 const api = axios.create({
   baseURL: "https://expensetracker-xssx.onrender.com/api",
-  timeout: 15000,
+  // timeout: 15000,
   headers: {
     "Content-Type": "application/json",
   },
