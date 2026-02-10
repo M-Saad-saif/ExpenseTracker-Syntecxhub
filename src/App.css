@@ -101,4 +101,9 @@ body {
   .loading-container p {
     font-size: 14px;
   }
+  .btn-primary {
+
+  padding: 7px 10px;
+
+}
 }

@@ -222,6 +222,10 @@
   .auth-form-container {
     padding: 40px 30px;
   }
+
+  .auth-branding .home-btn button {
+    margin-top: 60px;
+  }
 }
 
 @media (max-width: 480px) {

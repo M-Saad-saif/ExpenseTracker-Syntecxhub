@@ -296,4 +296,7 @@
   .nav-links {
     gap: 10px;
   }
+  .logo{
+    font-size: 15px;
+  }
 }
