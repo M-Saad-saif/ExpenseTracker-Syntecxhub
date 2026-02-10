@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import { toast } from 'react-toastify';
-import { FaEnvelope, FaLock, FaWallet } from 'react-icons/fa';
-import './Auth.css';
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import { toast } from "react-toastify";
+import { FaEnvelope, FaLock, FaWallet } from "react-icons/fa";
+import "./Auth.css";
 
 const Login = () => {
   const [formData, setFormData] = useState({
-    email: '',
-    password: '',
+    email: "",
+    password: "",
   });
   const [loading, setLoading] = useState(false);
 
@@ -17,7 +17,7 @@ const Login = () => {
 
   React.useEffect(() => {
     if (isAuthenticated) {
-      navigate('/dashboard');
+      navigate("/dashboard");
     }
   }, [isAuthenticated, navigate]);
 
@@ -35,8 +35,8 @@ const Login = () => {
     const result = await login(formData);
 
     if (result.success) {
-      toast.success('Login successful!');
-      navigate('/dashboard');
+      toast.success("Login successful!");
+      navigate("/dashboard");
     } else {
       toast.error(result.message);
     }
@@ -49,6 +49,13 @@ const Login = () => {
       <div className="auth-container">
         {/* Left Side - Branding */}
         <div className="auth-branding">
+          <div className="home-btn">
+            <Link to='/'>
+              <button>
+                <i class="ri-home-2-fill"></i>
+              </button>
+            </Link>
+          </div>
           <div className="branding-content">
             <div className="brand-logo">
               <FaWallet className="brand-icon" />
@@ -112,18 +119,14 @@ const Login = () => {
                 />
               </div>
 
-              <button
-                type="submit"
-                className="btn-submit"
-                disabled={loading}
-              >
-                {loading ? 'Signing In...' : 'Sign In'}
+              <button type="submit" className="btn-submit" disabled={loading}>
+                {loading ? "Signing In..." : "Sign In"}
               </button>
             </form>
 
             <div className="auth-footer">
               <p>
-                Don't have an account?{' '}
+                Don't have an account?{" "}
                 <Link to="/register" className="auth-link">
                   Sign Up
                 </Link>

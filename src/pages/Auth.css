@@ -192,6 +192,19 @@
   opacity: 0.8;
 }
 
+.auth-branding .home-btn {
+  top: -229px;
+  position: relative;
+}
+
+.auth-branding .home-btn button {
+  padding: 9px;
+  border-radius: 17px;
+  border: none;
+  cursor: pointer;
+  background: #e5d1ff;
+}
+
 /* Responsive Design */
 @media (max-width: 968px) {
   .auth-container {

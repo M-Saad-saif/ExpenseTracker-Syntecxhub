@@ -1,16 +1,16 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import { toast } from 'react-toastify';
-import { FaUser, FaEnvelope, FaLock, FaWallet } from 'react-icons/fa';
-import './Auth.css';
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import { toast } from "react-toastify";
+import { FaUser, FaEnvelope, FaLock, FaWallet } from "react-icons/fa";
+import "./Auth.css";
 
 const Register = () => {
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
   });
   const [loading, setLoading] = useState(false);
 
@@ -19,7 +19,7 @@ const Register = () => {
 
   React.useEffect(() => {
     if (isAuthenticated) {
-      navigate('/dashboard');
+      navigate("/dashboard");
     }
   }, [isAuthenticated, navigate]);
 
@@ -35,12 +35,12 @@ const Register = () => {
 
     // Validation
     if (formData.password !== formData.confirmPassword) {
-      toast.error('Passwords do not match');
+      toast.error("Passwords do not match");
       return;
     }
 
     if (formData.password.length < 6) {
-      toast.error('Password must be at least 6 characters');
+      toast.error("Password must be at least 6 characters");
       return;
     }
 
@@ -50,8 +50,8 @@ const Register = () => {
     const result = await register(registerData);
 
     if (result.success) {
-      toast.success('Registration successful!');
-      navigate('/dashboard');
+      toast.success("Registration successful!");
+      navigate("/dashboard");
     } else {
       toast.error(result.message);
     }
@@ -64,6 +64,13 @@ const Register = () => {
       <div className="auth-container">
         {/* Left Side - Branding */}
         <div className="auth-branding">
+          <div className="home-btn">
+            <Link to="/">
+              <button>
+                <i class="ri-home-2-fill"></i>
+              </button>
+            </Link>
+          </div>
           <div className="branding-content">
             <div className="brand-logo">
               <FaWallet className="brand-icon" />
@@ -157,18 +164,14 @@ const Register = () => {
                 />
               </div>
 
-              <button
-                type="submit"
-                className="btn-submit"
-                disabled={loading}
-              >
-                {loading ? 'Creating Account...' : 'Create Account'}
+              <button type="submit" className="btn-submit" disabled={loading}>
+                {loading ? "Creating Account..." : "Create Account"}
               </button>
             </form>
 
             <div className="auth-footer">
               <p>
-                Already have an account?{' '}
+                Already have an account?{" "}
                 <Link to="/login" className="auth-link">
                   Sign In
                 </Link>

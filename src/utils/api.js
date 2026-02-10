@@ -1,9 +1,5 @@
 import axios from 'axios';
 
-/**
- * Axios instance configured for API calls
- * Automatically includes auth token if available
- */
 const api = axios.create({
   baseURL: process.env.REACT_APP_API_URL || 'http://localhost:5000/api',
   headers: {
@@ -24,10 +20,6 @@ api.interceptors.request.use(
   }
 );
 
-/**
- * Response interceptor
- * Handles 401 errors by redirecting to login
- */
 api.interceptors.response.use(
   (response) => response,
   (error) => {

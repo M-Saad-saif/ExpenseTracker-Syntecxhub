@@ -26,7 +26,6 @@ const userSchema = new mongoose.Schema({
   timestamps: true,
 });
 
-// Simplified password hashing - no next() issues
 userSchema.pre('save', async function() {
   // Only hash if password is modified
   if (this.isModified('password')) {

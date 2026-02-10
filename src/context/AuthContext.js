@@ -1,23 +1,19 @@
-import React, { createContext, useState, useContext, useEffect } from 'react';
-import api from '../utils/api';
+import React, { createContext, useState, useContext, useEffect } from "react";
+import api from "../utils/api";
 
-/**
- * Authentication Context
- * Manages user authentication state across the application
- */
 const AuthContext = createContext();
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
 };
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [token, setToken] = useState(localStorage.getItem('token'));
+  const [token, setToken] = useState(localStorage.getItem("token"));
   const [loading, setLoading] = useState(true);
 
   // Load user data on mount if token exists
@@ -25,10 +21,10 @@ export const AuthProvider = ({ children }) => {
     const loadUser = async () => {
       if (token) {
         try {
-          const response = await api.get('/auth/me');
+          const response = await api.get("/auth/me");
           setUser(response.data.data);
         } catch (error) {
-          console.error('Failed to load user:', error);
+          console.error("Failed to load user:", error);
           logout();
         }
       }
@@ -38,16 +34,14 @@ export const AuthProvider = ({ children }) => {
     loadUser();
   }, [token]);
 
-  /**
-   * Register new user
-   */
+  // Register new user
   const register = async (userData) => {
     try {
-      const response = await api.post('/auth/register', userData);
+      const response = await api.post("/auth/register", userData);
       const { token: newToken, ...user } = response.data.data;
 
-      localStorage.setItem('token', newToken);
-      localStorage.setItem('user', JSON.stringify(user));
+      localStorage.setItem("token", newToken);
+      localStorage.setItem("user", JSON.stringify(user));
       setToken(newToken);
       setUser(user);
 
@@ -55,21 +49,19 @@ export const AuthProvider = ({ children }) => {
     } catch (error) {
       return {
         success: false,
-        message: error.response?.data?.message || 'Registration failed',
+        message: error.response?.data?.message || "Registration failed",
       };
     }
   };
 
-  /**
-   * Login user
-   */
+  //  Login user
   const login = async (credentials) => {
     try {
-      const response = await api.post('/auth/login', credentials);
+      const response = await api.post("/auth/login", credentials);
       const { token: newToken, ...user } = response.data.data;
 
-      localStorage.setItem('token', newToken);
-      localStorage.setItem('user', JSON.stringify(user));
+      localStorage.setItem("token", newToken);
+      localStorage.setItem("user", JSON.stringify(user));
       setToken(newToken);
       setUser(user);
 
@@ -77,31 +69,28 @@ export const AuthProvider = ({ children }) => {
     } catch (error) {
       return {
         success: false,
-        message: error.response?.data?.message || 'Login failed',
+        message: error.response?.data?.message || "Login failed",
       };
     }
   };
 
-  /**
-   * Logout user
-   */
+  //  Logout user
   const logout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
     setToken(null);
     setUser(null);
   };
 
-  /**
-   * Update user profile
-   */
+  
+  // Update user profile
   const updateProfile = async (profileData) => {
     try {
-      const response = await api.put('/auth/profile', profileData);
+      const response = await api.put("/auth/profile", profileData);
       const { token: newToken, ...updatedUser } = response.data.data;
 
-      localStorage.setItem('token', newToken);
-      localStorage.setItem('user', JSON.stringify(updatedUser));
+      localStorage.setItem("token", newToken);
+      localStorage.setItem("user", JSON.stringify(updatedUser));
       setToken(newToken);
       setUser(updatedUser);
 
@@ -109,7 +98,7 @@ export const AuthProvider = ({ children }) => {
     } catch (error) {
       return {
         success: false,
-        message: error.response?.data?.message || 'Update failed',
+        message: error.response?.data?.message || "Update failed",
       };
     }
   };

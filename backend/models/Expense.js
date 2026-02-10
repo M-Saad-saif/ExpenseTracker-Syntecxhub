@@ -1,9 +1,5 @@
 const mongoose = require('mongoose');
 
-/**
- * Expense Schema
- * Tracks user expense entries with categories and dates
- */
 const expenseSchema = new mongoose.Schema(
   {
     user: {

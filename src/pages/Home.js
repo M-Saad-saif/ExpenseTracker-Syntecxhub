@@ -1,8 +1,8 @@
-import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import { FaChartLine, FaWallet, FaPiggyBank, FaLock } from 'react-icons/fa';
-import './Home.css';
+import React from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import { FaChartLine, FaWallet, FaPiggyBank, FaLock } from "react-icons/fa";
+import "./Home.css";
 
 const Home = () => {
   const { isAuthenticated } = useAuth();
@@ -10,7 +10,7 @@ const Home = () => {
 
   React.useEffect(() => {
     if (isAuthenticated) {
-      navigate('/dashboard');
+      navigate("/dashboard");
     }
   }, [isAuthenticated, navigate]);
 
@@ -123,17 +123,14 @@ const Home = () => {
       <section className="cta-section">
         <div className="cta-content">
           <h2>Ready to Start Managing Your Money Better?</h2>
-          <p>Join thousands of users who are taking control of their finances</p>
+          <p>
+            Join thousands of users who are taking control of their finances
+          </p>
           <Link to="/register" className="btn-cta">
             Create Free Account
           </Link>
         </div>
       </section>
-
-      {/* Footer */}
-      <footer className="home-footer">
-        <p>&copy; 2024 ExpenseTracker. All rights reserved.</p>
-      </footer>
     </div>
   );
 };
