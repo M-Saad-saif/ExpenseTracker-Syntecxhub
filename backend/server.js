@@ -16,7 +16,7 @@ const app = express();
 const corsOptions = {
   origin: [
     "http://localhost:3000",
-    "https://expensetracker-xssx.onrender.com",
+    "https://expense-tracker-five-fawn.vercel.app",
   ],
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
   allowedHeaders: [
