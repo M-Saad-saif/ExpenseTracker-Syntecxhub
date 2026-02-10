@@ -1,4 +1,5 @@
 import React, { createContext, useState, useContext, useEffect } from "react";
+import { toast } from "react-toastify";
 import api from "../utils/api";
 
 const AuthContext = createContext();
@@ -17,42 +18,33 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Set axios default headers when token changes
   useEffect(() => {
     if (token) {
-      // Use uppercase Authorization (standard)
-      api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
     } else {
-      delete api.defaults.headers.common['Authorization'];
+      delete api.defaults.headers.common["Authorization"];
     }
   }, [token]);
 
-  // Load user data on mount if token exists
   useEffect(() => {
     const loadUser = async () => {
       if (token) {
         try {
-          console.log("Loading user with token:", token);
-
-          // Try to load user data
           const response = await api.get("/auth/me");
 
           if (response.data.success) {
             setUser(response.data.data);
-            // Update localStorage with fresh user data
             localStorage.setItem("user", JSON.stringify(response.data.data));
           }
         } catch (error) {
           console.error("Failed to load user:", error);
 
-          // Don't logout on CORS/Network errors
           if (
             error.message !== "Network Error" &&
             error.response?.status === 401
           ) {
             logout();
           } else {
-            // For CORS errors, try to get user from localStorage
             const storedUser = localStorage.getItem("user");
             if (storedUser) {
               setUser(JSON.parse(storedUser));
@@ -66,31 +58,24 @@ export const AuthProvider = ({ children }) => {
     loadUser();
   }, [token]);
 
-  // Register new user
+  // Registering new user
   const register = async (userData) => {
     try {
       setLoading(true);
       setError(null);
-
-      console.log("Registering user:", userData);
 
       const response = await api.post("/auth/register", userData);
 
       if (response.data.success) {
         const { token: newToken, ...user } = response.data.data;
 
-        // Save to localStorage
         localStorage.setItem("token", newToken);
         localStorage.setItem("user", JSON.stringify(user));
 
-        // Update state
         setToken(newToken);
         setUser(user);
 
-        // Set axios headers
-        api.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
-
-        console.log("Registration successful, token saved");
+        api.defaults.headers.common["Authorization"] = `Bearer ${newToken}`;
 
         return {
           success: true,
@@ -101,9 +86,8 @@ export const AuthProvider = ({ children }) => {
         throw new Error(response.data.message || "Registration failed");
       }
     } catch (error) {
-      console.error("Registration error:", error);
       const errorMessage =
-        error.response?.data?.message || error.message || "Registration failed";
+        error.response.data.message || error.message || "Registration failed";
       setError(errorMessage);
 
       return {
@@ -126,16 +110,13 @@ export const AuthProvider = ({ children }) => {
       if (response.data.success) {
         const { token: newToken, ...user } = response.data.data;
 
-        // Save to localStorage
         localStorage.setItem("token", newToken);
         localStorage.setItem("user", JSON.stringify(user));
 
-        // Update state
         setToken(newToken);
         setUser(user);
 
-        // Set axios headers
-        api.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
+        api.defaults.headers.common["Authorization"] = `Bearer ${newToken}`;
 
         return {
           success: true,
@@ -162,19 +143,14 @@ export const AuthProvider = ({ children }) => {
 
   // Logout user
   const logout = () => {
-    console.log("Logging out user");
-
-    // Clear localStorage
+    toast.success("Logged Out Successfully")
     localStorage.removeItem("token");
     localStorage.removeItem("user");
 
-    // Clear state
     setToken(null);
     setUser(null);
 
-    // Clear axios headers
-    delete api.defaults.headers.common['Authorization'];
-
+    delete api.defaults.headers.common["Authorization"];
     setError(null);
   };
 
@@ -189,16 +165,13 @@ export const AuthProvider = ({ children }) => {
       if (response.data.success) {
         const { token: newToken, ...updatedUser } = response.data.data;
 
-        // Update localStorage
         localStorage.setItem("token", newToken);
         localStorage.setItem("user", JSON.stringify(updatedUser));
 
-        // Update state
         setToken(newToken);
         setUser(updatedUser);
 
-        // Update axios headers with new token
-        api.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
+        api.defaults.headers.common["Authorization"] = `Bearer ${newToken}`;
 
         return {
           success: true,
@@ -232,7 +205,6 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Update user profile data (for profile pic upload response)
   const updateUserProfile = (updatedUserData) => {
     if (updatedUserData) {
       setUser(updatedUserData);

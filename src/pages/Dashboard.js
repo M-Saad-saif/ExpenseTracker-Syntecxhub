@@ -26,7 +26,6 @@ const Dashboard = () => {
   const [currentMonth] = useState(new Date().getMonth() + 1);
   const [currentYear] = useState(new Date().getFullYear());
 
-  // State for expenses and incomes
   const [expenses, setExpenses] = useState([]);
   const [incomes, setIncomes] = useState([]);
   const [monthlyExpenses, setMonthlyExpenses] = useState({});
@@ -66,12 +65,10 @@ const Dashboard = () => {
     } catch (error) {
       console.error("Failed to fetch expenses:", error);
 
-      // Don't show toast for CORS errors
       if (error.message !== "Network Error") {
         toast.error("Failed to fetch expenses");
       }
 
-      // Set empty array to prevent UI break
       setExpenses([]);
     }
   };
@@ -103,7 +100,6 @@ const Dashboard = () => {
     } catch (error) {
       console.error("Failed to fetch monthly data:", error);
 
-      // Set empty objects to prevent UI break
       setMonthlyExpenses({});
       setMonthlyIncomes({});
     }
@@ -195,7 +191,7 @@ const Dashboard = () => {
             <div className="header-actions">
               <div className="user-info">
                 <FaUser />
-                <span>{capitalizeFirstLetter(user?.name)}</span>
+                <span>{capitalizeFirstLetter(user.name)}</span>
               </div>
               <button onClick={logout} className="btn-logout">
                 <FaSignOutAlt /> Logout
@@ -259,8 +255,8 @@ const Dashboard = () => {
                 />
 
                 <div className="profile-info">
-                  <h3 className="profile-name">{user?.name}</h3>
-                  <p className="profile-email">{user?.email}</p>
+                  <h3 className="profile-name">{capitalizeFirstLetter(user.name)}</h3>
+                  <p className="profile-email">{user.email}</p>
                   {uploadingImage && (
                     <div className="uploading-text">Uploading...</div>
                   )}

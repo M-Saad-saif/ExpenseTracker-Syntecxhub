@@ -33,7 +33,6 @@ const protect = async (req, res, next) => {
     }
   }
 
-  // No token provided
   if (!token) {
     return res.status(401).json({
       success: false,

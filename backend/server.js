@@ -20,30 +20,26 @@ const corsOptions = {
   ],
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
   allowedHeaders: [
-    "Content-Type", 
-    "Authorization", 
-    "authorization",  // Add lowercase version
-    "x-requested-with"
+    "Content-Type",
+    "Authorization",
+    "authorization",
+    "x-requested-with",
   ],
   exposedHeaders: ["Authorization", "authorization"],
   credentials: true,
   preflightContinue: false,
-  optionsSuccessStatus: 204
+  optionsSuccessStatus: 204,
 };
 
 app.use(cors(corsOptions));
 
-// Body parsers - AFTER CORS
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-
-// Logging middleware (only in development)
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
 
-// Welcome route
 app.get("/health", (req, res) => {
   res.json({
     message: "Welcome to Expense Tracker API",
@@ -56,9 +52,6 @@ app.get("/health", (req, res) => {
   });
 });
 
-
-
-// Routes
 app.use("/api/auth", require("./routes/authRoutes"));
 app.use("/api/expenses", require("./routes/expenseRoutes"));
 app.use("/api/incomes", require("./routes/incomeRoutes"));

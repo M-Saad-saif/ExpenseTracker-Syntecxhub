@@ -1,10 +1,8 @@
-const Income = require('../models/Income');
+const Income = require("../models/Income");
 
-/**
- * @desc    Get all incomes for logged in user
- * @route   GET /api/incomes
- * @access  Private
- */
+// @desc    Get all incomes for logged in user
+// @route   GET /api/incomes
+// @access  Private
 const getIncomes = async (req, res) => {
   try {
     const incomes = await Income.find({ user: req.user._id }).sort({
@@ -24,16 +22,13 @@ const getIncomes = async (req, res) => {
   }
 };
 
-/**
- * @desc    Get monthly incomes
- * @route   GET /api/incomes/monthly/:year/:month
- * @access  Private
- */
+// @desc    Get monthly incomes
+// @route   GET /api/incomes/monthly/:year/:month
+// @access  Private
 const getMonthlyIncomes = async (req, res) => {
   try {
     const { year, month } = req.params;
 
-    // Create date range for the month
     const startDate = new Date(year, month - 1, 1);
     const endDate = new Date(year, month, 0, 23, 59, 59);
 
@@ -45,7 +40,6 @@ const getMonthlyIncomes = async (req, res) => {
       },
     }).sort({ date: -1 });
 
-    // Calculate total
     const total = incomes.reduce((sum, income) => sum + income.amount, 0);
 
     // Group by category
@@ -74,11 +68,9 @@ const getMonthlyIncomes = async (req, res) => {
   }
 };
 
-/**
- * @desc    Get single income
- * @route   GET /api/incomes/:id
- * @access  Private
- */
+// @desc    Get single income
+// @route   GET /api/incomes/:id
+// @access  Private
 const getIncome = async (req, res) => {
   try {
     const income = await Income.findById(req.params.id);
@@ -86,15 +78,14 @@ const getIncome = async (req, res) => {
     if (!income) {
       return res.status(404).json({
         success: false,
-        message: 'Income not found',
+        message: "Income not found",
       });
     }
 
-    // Make sure user owns the income
     if (income.user.toString() !== req.user._id.toString()) {
       return res.status(401).json({
         success: false,
-        message: 'Not authorized to access this income',
+        message: "Not authorized to access this income",
       });
     }
 
@@ -110,20 +101,17 @@ const getIncome = async (req, res) => {
   }
 };
 
-/**
- * @desc    Create new income
- * @route   POST /api/incomes
- * @access  Private
- */
+// @desc    Create new income
+// @route   POST /api/incomes
+// @access  Private
 const createIncome = async (req, res) => {
   try {
     const { title, amount, category, description, date } = req.body;
 
-    // Validation
     if (!title || !amount || !category) {
       return res.status(400).json({
         success: false,
-        message: 'Please provide title, amount, and category',
+        message: "Please provide title, amount, and category",
       });
     }
 
@@ -139,7 +127,7 @@ const createIncome = async (req, res) => {
     res.status(201).json({
       success: true,
       data: income,
-      message: 'Income created successfully',
+      message: "Income created successfully",
     });
   } catch (error) {
     res.status(500).json({
@@ -149,11 +137,9 @@ const createIncome = async (req, res) => {
   }
 };
 
-/**
- * @desc    Update income
- * @route   PUT /api/incomes/:id
- * @access  Private
- */
+// @desc    Update income
+// @route   PUT /api/incomes/:id
+// @access  Private
 const updateIncome = async (req, res) => {
   try {
     let income = await Income.findById(req.params.id);
@@ -161,7 +147,7 @@ const updateIncome = async (req, res) => {
     if (!income) {
       return res.status(404).json({
         success: false,
-        message: 'Income not found',
+        message: "Income not found",
       });
     }
 
@@ -169,7 +155,7 @@ const updateIncome = async (req, res) => {
     if (income.user.toString() !== req.user._id.toString()) {
       return res.status(401).json({
         success: false,
-        message: 'Not authorized to update this income',
+        message: "Not authorized to update this income",
       });
     }
 
@@ -181,7 +167,7 @@ const updateIncome = async (req, res) => {
     res.json({
       success: true,
       data: income,
-      message: 'Income updated successfully',
+      message: "Income updated successfully",
     });
   } catch (error) {
     res.status(500).json({
@@ -191,11 +177,9 @@ const updateIncome = async (req, res) => {
   }
 };
 
-/**
- * @desc    Delete income
- * @route   DELETE /api/incomes/:id
- * @access  Private
- */
+// @desc    Delete income
+// @route   DELETE /api/incomes/:id
+// @access  Private
 const deleteIncome = async (req, res) => {
   try {
     const income = await Income.findById(req.params.id);
@@ -203,7 +187,7 @@ const deleteIncome = async (req, res) => {
     if (!income) {
       return res.status(404).json({
         success: false,
-        message: 'Income not found',
+        message: "Income not found",
       });
     }
 
@@ -211,7 +195,7 @@ const deleteIncome = async (req, res) => {
     if (income.user.toString() !== req.user._id.toString()) {
       return res.status(401).json({
         success: false,
-        message: 'Not authorized to delete this income',
+        message: "Not authorized to delete this income",
       });
     }
 
@@ -220,7 +204,7 @@ const deleteIncome = async (req, res) => {
     res.json({
       success: true,
       data: {},
-      message: 'Income deleted successfully',
+      message: "Income deleted successfully",
     });
   } catch (error) {
     res.status(500).json({

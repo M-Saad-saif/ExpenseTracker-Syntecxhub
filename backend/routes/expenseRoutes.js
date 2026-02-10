@@ -10,7 +10,7 @@ const {
 } = require('../controllers/expenseController');
 const { protect } = require('../middleware/authMiddleware');
 
-// All routes are protected
+// protected ROutes
 router.use(protect);
 
 // General routes

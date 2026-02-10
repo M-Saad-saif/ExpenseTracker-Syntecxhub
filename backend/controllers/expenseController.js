@@ -1,10 +1,8 @@
-const Expense = require('../models/Expense');
+const Expense = require("../models/Expense");
 
-/**
- * @desc    Get all expenses for logged in user
- * @route   GET /api/expenses
- * @access  Private
- */
+// @desc    Get all expenses for logged in user
+// @route   GET /api/expenses
+// @access  Private
 const getExpenses = async (req, res) => {
   try {
     const expenses = await Expense.find({ user: req.user._id }).sort({
@@ -24,16 +22,13 @@ const getExpenses = async (req, res) => {
   }
 };
 
-/**
- * @desc    Get monthly expenses
- * @route   GET /api/expenses/monthly/:year/:month
- * @access  Private
- */
+// @desc    Get monthly expenses
+// @route   GET /api/expenses/monthly/:year/:month
+// @access  Private
 const getMonthlyExpenses = async (req, res) => {
   try {
     const { year, month } = req.params;
 
-    // Create date range for the month
     const startDate = new Date(year, month - 1, 1);
     const endDate = new Date(year, month, 0, 23, 59, 59);
 
@@ -45,10 +40,8 @@ const getMonthlyExpenses = async (req, res) => {
       },
     }).sort({ date: -1 });
 
-    // Calculate total
     const total = expenses.reduce((sum, expense) => sum + expense.amount, 0);
 
-    // Group by category
     const byCategory = expenses.reduce((acc, expense) => {
       if (!acc[expense.category]) {
         acc[expense.category] = 0;
@@ -74,11 +67,9 @@ const getMonthlyExpenses = async (req, res) => {
   }
 };
 
-/**
- * @desc    Get single expense
- * @route   GET /api/expenses/:id
- * @access  Private
- */
+// @desc    Get single expense
+// @route   GET /api/expenses/:id
+// @access  Private
 const getExpense = async (req, res) => {
   try {
     const expense = await Expense.findById(req.params.id);
@@ -86,7 +77,7 @@ const getExpense = async (req, res) => {
     if (!expense) {
       return res.status(404).json({
         success: false,
-        message: 'Expense not found',
+        message: "Expense not found",
       });
     }
 
@@ -94,7 +85,7 @@ const getExpense = async (req, res) => {
     if (expense.user.toString() !== req.user._id.toString()) {
       return res.status(401).json({
         success: false,
-        message: 'Not authorized to access this expense',
+        message: "Not authorized to access this expense",
       });
     }
 
@@ -119,11 +110,10 @@ const createExpense = async (req, res) => {
   try {
     const { title, amount, category, description, date } = req.body;
 
-    // Validation
     if (!title || !amount || !category) {
       return res.status(400).json({
         success: false,
-        message: 'Please provide title, amount, and category',
+        message: "Please provide title, amount, and category",
       });
     }
 
@@ -139,7 +129,7 @@ const createExpense = async (req, res) => {
     res.status(201).json({
       success: true,
       data: expense,
-      message: 'Expense created successfully',
+      message: "Expense created successfully",
     });
   } catch (error) {
     res.status(500).json({
@@ -149,11 +139,9 @@ const createExpense = async (req, res) => {
   }
 };
 
-/**
- * @desc    Update expense
- * @route   PUT /api/expenses/:id
- * @access  Private
- */
+// @desc    Update expense
+// @route   PUT /api/expenses/:id
+// @access  Private
 const updateExpense = async (req, res) => {
   try {
     let expense = await Expense.findById(req.params.id);
@@ -161,15 +149,15 @@ const updateExpense = async (req, res) => {
     if (!expense) {
       return res.status(404).json({
         success: false,
-        message: 'Expense not found',
+        message: "Expense not found",
       });
     }
 
-    // Make sure user owns the expense
+    // if user own the expense
     if (expense.user.toString() !== req.user._id.toString()) {
       return res.status(401).json({
         success: false,
-        message: 'Not authorized to update this expense',
+        message: "Not authorized to update this expense",
       });
     }
 
@@ -181,7 +169,7 @@ const updateExpense = async (req, res) => {
     res.json({
       success: true,
       data: expense,
-      message: 'Expense updated successfully',
+      message: "Expense updated successfully",
     });
   } catch (error) {
     res.status(500).json({
@@ -191,11 +179,10 @@ const updateExpense = async (req, res) => {
   }
 };
 
-/**
- * @desc    Delete expense
- * @route   DELETE /api/expenses/:id
- * @access  Private
- */
+
+// @desc    Delete expense
+// @route   DELETE /api/expenses/:id
+// @access  Private
 const deleteExpense = async (req, res) => {
   try {
     const expense = await Expense.findById(req.params.id);
@@ -203,7 +190,7 @@ const deleteExpense = async (req, res) => {
     if (!expense) {
       return res.status(404).json({
         success: false,
-        message: 'Expense not found',
+        message: "Expense not found",
       });
     }
 
@@ -211,7 +198,7 @@ const deleteExpense = async (req, res) => {
     if (expense.user.toString() !== req.user._id.toString()) {
       return res.status(401).json({
         success: false,
-        message: 'Not authorized to delete this expense',
+        message: "Not authorized to delete this expense",
       });
     }
 
@@ -220,7 +207,7 @@ const deleteExpense = async (req, res) => {
     res.json({
       success: true,
       data: {},
-      message: 'Expense deleted successfully',
+      message: "Expense deleted successfully",
     });
   } catch (error) {
     res.status(500).json({
