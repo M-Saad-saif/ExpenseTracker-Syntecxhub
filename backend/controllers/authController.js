@@ -1,5 +1,5 @@
-const User = require('../models/User');
-const jwt = require('jsonwebtoken');
+const User = require("../models/User");
+const jwt = require("jsonwebtoken");
 
 /**
  * Generate JWT Token
@@ -25,7 +25,7 @@ const registerUser = async (req, res) => {
     if (!name || !email || !password) {
       return res.status(400).json({
         success: false,
-        message: 'Please provide all required fields',
+        message: "Please provide all required fields",
       });
     }
 
@@ -34,7 +34,7 @@ const registerUser = async (req, res) => {
     if (userExists) {
       return res.status(400).json({
         success: false,
-        message: 'User already exists with this email',
+        message: "User already exists with this email",
       });
     }
 
@@ -54,12 +54,12 @@ const registerUser = async (req, res) => {
           email: user.email,
           token: generateToken(user._id),
         },
-        message: 'User registered successfully',
+        message: "User registered successfully",
       });
     } else {
       res.status(400).json({
         success: false,
-        message: 'Invalid user data',
+        message: "Invalid user data",
       });
     }
   } catch (error) {
@@ -83,12 +83,12 @@ const loginUser = async (req, res) => {
     if (!email || !password) {
       return res.status(400).json({
         success: false,
-        message: 'Please provide email and password',
+        message: "Please provide email and password",
       });
     }
 
     // Check for user (include password for comparison)
-    const user = await User.findOne({ email }).select('+password');
+    const user = await User.findOne({ email }).select("+password");
 
     if (user && (await user.matchPassword(password))) {
       res.json({
@@ -99,12 +99,12 @@ const loginUser = async (req, res) => {
           email: user.email,
           token: generateToken(user._id),
         },
-        message: 'Login successful',
+        message: "Login successful",
       });
     } else {
       res.status(401).json({
         success: false,
-        message: 'Invalid email or password',
+        message: "Invalid email or password",
       });
     }
   } catch (error) {
@@ -115,11 +115,9 @@ const loginUser = async (req, res) => {
   }
 };
 
-/**
- * @desc    Get current logged in user
- * @route   GET /api/auth/me
- * @access  Private
- */
+// @desc    Get current logged in user
+// @route   GET /api/auth/me
+// @access  Private
 const getMe = async (req, res) => {
   try {
     const user = await User.findById(req.user._id);
@@ -136,19 +134,65 @@ const getMe = async (req, res) => {
   }
 };
 
-/**
- * @desc    Update user profile
- * @route   PUT /api/auth/profile
- * @access  Private
- */
+// @desc    set user profile
+// @route   POST /api/auth/uploadprofilepic
+// @access  Private
+const setProfilePic = async (req, res) => {
+  try {
+    if (!req.file || !req.file.path) {
+      return res
+        .status(400)
+        .json({ success: false, error: "Failed to upload profile picture" });
+    }
+
+    const userId = req.user.id;
+    const profilePicPath = req.file.path;
+    const user = await User.findByIdAndUpdate(
+      userId, 
+      { profileImage: profilePicPath },
+      { new: true },
+    );
+    
+    console.log({message:"find the user "});
+    if (!user) {
+      return res
+      .status(404)
+      .json({ success: false, message: "User not found try again" });
+    }
+    console.log({message:"find the user "});
+
+    res.json({
+      success: true,
+      message: "Profile pic updated",
+      user: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        profileImage: user.profileImage,
+        monthlyBudget: user.monthlyBudget,
+      },
+    });
+  } catch (error) {
+    console.error("Upload error:", error);
+    res.status(500).json({
+      success: false,
+      error: "Cannot upload profile picture due to internal issues",
+      message: error.message,
+    });
+  }
+};
+
+// @desc    Update user profile
+// @route   PUT /api/auth/profile
+// @access  Private
 const updateProfile = async (req, res) => {
   try {
-    const user = await User.findById(req.user._id).select('+password');
+    const user = await User.findById(req.user._id).select("+password");
 
     if (!user) {
       return res.status(404).json({
         success: false,
-        message: 'User not found',
+        message: "User not found",
       });
     }
 
@@ -173,7 +217,7 @@ const updateProfile = async (req, res) => {
         monthlyBudget: updatedUser.monthlyBudget,
         token: generateToken(updatedUser._id),
       },
-      message: 'Profile updated successfully',
+      message: "Profile updated successfully",
     });
   } catch (error) {
     res.status(500).json({
@@ -188,4 +232,5 @@ module.exports = {
   loginUser,
   getMe,
   updateProfile,
+  setProfilePic,
 };

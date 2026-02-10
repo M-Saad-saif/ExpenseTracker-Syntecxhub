@@ -15,6 +15,13 @@ const ExpensesTab = ({ expenses, fetchData }) => {
     date: new Date().toISOString().split('T')[0],
   });
 
+  function capitalizeFirstLetter(string) {
+    if (string.length === 0) {
+      return "";
+    }
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }
+
   const handleExpenseSubmit = async (e) => {
     e.preventDefault();
 
@@ -194,7 +201,7 @@ const ExpensesTab = ({ expenses, fetchData }) => {
                 {expenses.map((expense) => (
                   <tr key={expense._id}>
                     <td>{format(new Date(expense.date), 'MMM dd, yyyy')}</td>
-                    <td>{expense.title}</td>
+                    <td>{capitalizeFirstLetter(expense.title)}</td>
                     <td>
                       <span className="category-badge">{expense.category}</span>
                     </td>

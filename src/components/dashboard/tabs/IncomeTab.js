@@ -1,19 +1,26 @@
-import React, { useState } from 'react';
-import { FaPlus, FaEdit, FaTrash } from 'react-icons/fa';
-import { format } from 'date-fns';
-import { toast } from 'react-toastify';
-import api from '../../../utils/api';
+import React, { useState } from "react";
+import { FaPlus, FaEdit, FaTrash } from "react-icons/fa";
+import { format } from "date-fns";
+import { toast } from "react-toastify";
+import api from "../../../utils/api";
 
 const IncomeTab = ({ incomes, fetchData }) => {
   const [showIncomeForm, setShowIncomeForm] = useState(false);
   const [editingIncome, setEditingIncome] = useState(null);
   const [incomeForm, setIncomeForm] = useState({
-    title: '',
-    amount: '',
-    category: 'Salary',
-    description: '',
-    date: new Date().toISOString().split('T')[0],
+    title: "",
+    amount: "",
+    category: "Salary",
+    description: "",
+    date: new Date().toISOString().split("T")[0],
   });
+
+  function capitalizeFirstLetter(string) {
+    if (string.length === 0) {
+      return "";
+    }
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }
 
   const handleIncomeSubmit = async (e) => {
     e.preventDefault();
@@ -21,27 +28,27 @@ const IncomeTab = ({ incomes, fetchData }) => {
     try {
       if (editingIncome) {
         await api.put(`/incomes/${editingIncome._id}`, incomeForm);
-        toast.success('Income updated successfully');
+        toast.success("Income updated successfully");
       } else {
-        await api.post('/incomes', incomeForm);
-        toast.success('Income added successfully');
+        await api.post("/incomes", incomeForm);
+        toast.success("Income added successfully");
       }
 
       resetIncomeForm();
       fetchData();
     } catch (error) {
-      toast.error(error.response?.data?.message || 'Operation failed');
+      toast.error(error.response?.data?.message || "Operation failed");
     }
   };
 
   const handleDeleteIncome = async (id) => {
-    if (window.confirm('Are you sure you want to delete this income?')) {
+    if (window.confirm("Are you sure you want to delete this income?")) {
       try {
         await api.delete(`/incomes/${id}`);
-        toast.success('Income deleted successfully');
+        toast.success("Income deleted successfully");
         fetchData();
       } catch (error) {
-        toast.error('Failed to delete income');
+        toast.error("Failed to delete income");
       }
     }
   };
@@ -52,19 +59,19 @@ const IncomeTab = ({ incomes, fetchData }) => {
       title: income.title,
       amount: income.amount,
       category: income.category,
-      description: income.description || '',
-      date: new Date(income.date).toISOString().split('T')[0],
+      description: income.description || "",
+      date: new Date(income.date).toISOString().split("T")[0],
     });
     setShowIncomeForm(true);
   };
 
   const resetIncomeForm = () => {
     setIncomeForm({
-      title: '',
-      amount: '',
-      category: 'Salary',
-      description: '',
-      date: new Date().toISOString().split('T')[0],
+      title: "",
+      amount: "",
+      category: "Salary",
+      description: "",
+      date: new Date().toISOString().split("T")[0],
     });
     setEditingIncome(null);
     setShowIncomeForm(false);
@@ -78,14 +85,14 @@ const IncomeTab = ({ incomes, fetchData }) => {
           className="btn-add"
           onClick={() => setShowIncomeForm(!showIncomeForm)}
         >
-          <FaPlus /> {showIncomeForm ? 'Close Form' : 'Add Income'}
+          <FaPlus /> {showIncomeForm ? "Close Form" : "Add Income"}
         </button>
       </div>
 
       {/* Add/Edit Form */}
       {showIncomeForm && (
         <div className="form-card">
-          <h3>{editingIncome ? 'Edit Income' : 'Add New Income'}</h3>
+          <h3>{editingIncome ? "Edit Income" : "Add New Income"}</h3>
           <form onSubmit={handleIncomeSubmit} className="income-form">
             <div className="form-row">
               <div className="form-group">
@@ -157,7 +164,7 @@ const IncomeTab = ({ incomes, fetchData }) => {
 
             <div className="form-actions">
               <button type="submit" className="btn-submit">
-                {editingIncome ? 'Update' : 'Add'} Income
+                {editingIncome ? "Update" : "Add"} Income
               </button>
               <button
                 type="button"
@@ -189,15 +196,15 @@ const IncomeTab = ({ incomes, fetchData }) => {
               <tbody>
                 {incomes.map((income) => (
                   <tr key={income._id}>
-                    <td>{format(new Date(income.date), 'MMM dd, yyyy')}</td>
-                    <td>{income.title}</td>
+                    <td>{format(new Date(income.date), "MMM dd, yyyy")}</td>
+                    <td>{capitalizeFirstLetter(income.title)}</td>
                     <td>
                       <span className="category-badge income-badge">
                         {income.category}
                       </span>
                     </td>
                     <td className="amount-cell income-amount">
-                      ${income.amount.toFixed(2)}
+                      Rs: {income.amount}/-
                     </td>
                     <td>
                       <div className="action-buttons">

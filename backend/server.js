@@ -7,9 +7,9 @@ const { notFound, errorHandler } = require("./middleware/errorMiddleware");
 const path = require("path");
 require("dotenv").config({ path: path.join(__dirname, ".env") });
 dotenv.config();
+require('./config/cloudinary')
 
 connectDB();
-
 const app = express();
 
 // Middleware

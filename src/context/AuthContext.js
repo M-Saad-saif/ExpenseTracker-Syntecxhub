@@ -103,6 +103,19 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+
+  // In your AuthContext.js
+const updateUserProfile = async (updatedUserData) => {
+  try {
+    // Update user in state
+    setUser(prev => ({
+      ...prev,
+      ...updatedUserData
+    }));
+  } catch (error) {
+    console.error('Error updating user profile:', error);
+  }
+};
   const value = {
     user,
     token,
@@ -111,6 +124,7 @@ export const AuthProvider = ({ children }) => {
     login,
     logout,
     updateProfile,
+    updateUserProfile,
     isAuthenticated: !!token,
   };
 
