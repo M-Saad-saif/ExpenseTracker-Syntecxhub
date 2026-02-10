@@ -11,6 +11,7 @@ const Login = () => {
     password: "",
   });
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const { login, isAuthenticated } = useAuth();
   const navigate = useNavigate();
@@ -38,6 +39,7 @@ const Login = () => {
       toast.success("Login successful!");
       navigate("/dashboard");
     } else {
+      setError("Wrong Credential");
       toast.error(result.message);
     }
 
@@ -46,12 +48,12 @@ const Login = () => {
 
   return (
     <div className="auth-page">
-       <title>Login - ExpenseTracker</title>
+      <title>Login - ExpenseTracker</title>
       <div className="auth-container">
         {/* Left Side - Branding */}
         <div className="auth-branding">
           <div className="home-btn">
-            <Link to='/'>
+            <Link to="/">
               <button>
                 <i class="ri-home-2-fill"></i>
               </button>
@@ -119,6 +121,19 @@ const Login = () => {
                   required
                 />
               </div>
+
+              {error  && (
+                <div className="errormsg">
+                  <p
+                    style={{
+                      color: "red",
+                      textAlign:"center"
+                    }}
+                  >
+                    {error}
+                  </p>
+                </div>
+              )}
 
               <button type="submit" className="btn-submit" disabled={loading}>
                 {loading ? "Signing In..." : "Sign In"}
