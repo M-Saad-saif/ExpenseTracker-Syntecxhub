@@ -65,6 +65,14 @@ const Dashboard = () => {
       setExpenses(response.data.data || []);
     } catch (error) {
       console.error("Failed to fetch expenses:", error);
+
+      // Don't show toast for CORS errors
+      if (error.message !== "Network Error") {
+        toast.error("Failed to fetch expenses");
+      }
+
+      // Set empty array to prevent UI break
+      setExpenses([]);
     }
   };
 
@@ -74,6 +82,12 @@ const Dashboard = () => {
       setIncomes(response.data.data || []);
     } catch (error) {
       console.error("Failed to fetch incomes:", error);
+
+      if (error.message !== "Network Error") {
+        toast.error("Failed to fetch incomes");
+      }
+
+      setIncomes([]);
     }
   };
 
@@ -88,6 +102,10 @@ const Dashboard = () => {
       setMonthlyIncomes(incomesRes.data.data || {});
     } catch (error) {
       console.error("Failed to fetch monthly data:", error);
+
+      // Set empty objects to prevent UI break
+      setMonthlyExpenses({});
+      setMonthlyIncomes({});
     }
   };
 
