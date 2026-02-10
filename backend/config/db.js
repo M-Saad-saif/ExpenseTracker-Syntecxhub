@@ -1,10 +1,16 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const connectDB = async () => {
-  const DB_URL = process.env.MONGODB_URI || 'mongodb://localhost:27017/expense-tracker';
+  const DB_URL =
+    process.env.MONGODB_URI || "mongodb://localhost:27017/expense-tracker";
   try {
-    const conn = await mongoose.connect(DB_URL);
-    console.log(`MongoDB Connected: ${conn.connection.host}`);
+    await mongoose.connect(DB_URL);
+    const host = mongoose.connection.host; // checing the URL string
+    if (host.includes("mongodb.net")) {
+      console.log(" Connected to: MongoDB Atlas (Cloud)");
+    } else {
+      console.log(" Connected to: Local MongoDB");
+    }
   } catch (error) {
     console.error(`Error: ${error.message}`);
     process.exit(1);
