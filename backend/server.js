@@ -19,9 +19,9 @@ app.use(express.urlencoded({ extended: true }));
 // CORS configuration
 app.use(
   cors({
-    origin: "*",
+    origin: "https://expense-tracker-five-fawn.vercel.app" || "http://localhost:3000",
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
-    allowedHeaders: ["Content-Type", "auth-token"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   }),
 );
 
