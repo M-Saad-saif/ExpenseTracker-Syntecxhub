@@ -22,3 +22,9 @@ node_modules
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+
+CORS_FIX_GUIDEE.md
+CORS_FIX_SOLUTION.md
+CORS_QUICK_FIX.md
+DEPLOYMENT_CHECKLIST.md

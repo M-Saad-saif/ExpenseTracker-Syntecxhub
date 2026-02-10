@@ -12,16 +12,38 @@ require("./config/cloudinary");
 connectDB();
 const app = express();
 
-// SIMPLE CORS CONFIGURATION
-app.use(
-  cors({
-    origin: ["https://expense-tracker-five-fawn.vercel.app", "http://localhost:3000"],
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
-    allowedHeaders: ["Content-Type", "Authorization", "Accept"],
-    exposedHeaders: ["Authorization"],
-  })
-);
+// CORS Configuration - Apply BEFORE other middleware
+const corsOptions = {
+  origin: function (origin, callback) {
+    const allowedOrigins = [
+      "https://expense-tracker-five-fawn.vercel.app",
+      "http://localhost:3000"
+    ];
+    
+    // Allow requests with no origin (mobile apps, Postman, curl, etc)
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
+  allowedHeaders: ["Content-Type", "Authorization", "Accept", "Accept-Language"],
+  exposedHeaders: ["Authorization",  "authorization", ],
+  optionsSuccessStatus: 200,
+  preflightContinue: false,
+  maxAge: 86400, // 24 hours
+};
+
+// Apply CORS middleware
+app.use(cors(corsOptions));
+
+// Handle preflight requests explicitly
+app.options("*", cors(corsOptions));
+app.options("*", (req, res) => {
+  res.sendStatus(200);
+});
 
 // Middleware
 app.use(express.json());
