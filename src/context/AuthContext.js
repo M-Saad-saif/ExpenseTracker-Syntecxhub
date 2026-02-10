@@ -20,11 +20,10 @@ export const AuthProvider = ({ children }) => {
   // Set axios default headers when token changes
   useEffect(() => {
     if (token) {
-      api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-      api.defaults.headers.common["authorization"] = `Bearer ${token}`; 
+      // Use uppercase Authorization (standard)
+      api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     } else {
-      delete api.defaults.headers.common["Authorization"];
-      delete api.defaults.headers.common["authorization"];
+      delete api.defaults.headers.common['Authorization'];
     }
   }, [token]);
 
@@ -34,10 +33,10 @@ export const AuthProvider = ({ children }) => {
       if (token) {
         try {
           console.log("Loading user with token:", token);
-          
+
           // Try to load user data
           const response = await api.get("/auth/me");
-          
+
           if (response.data.success) {
             setUser(response.data.data);
             // Update localStorage with fresh user data
@@ -45,9 +44,12 @@ export const AuthProvider = ({ children }) => {
           }
         } catch (error) {
           console.error("Failed to load user:", error);
-          
+
           // Don't logout on CORS/Network errors
-          if (error.message !== "Network Error" && error.response?.status === 401) {
+          if (
+            error.message !== "Network Error" &&
+            error.response?.status === 401
+          ) {
             logout();
           } else {
             // For CORS errors, try to get user from localStorage
@@ -69,41 +71,41 @@ export const AuthProvider = ({ children }) => {
     try {
       setLoading(true);
       setError(null);
-      
+
       console.log("Registering user:", userData);
-      
+
       const response = await api.post("/auth/register", userData);
-      
+
       if (response.data.success) {
         const { token: newToken, ...user } = response.data.data;
 
         // Save to localStorage
         localStorage.setItem("token", newToken);
         localStorage.setItem("user", JSON.stringify(user));
-        
+
         // Update state
         setToken(newToken);
         setUser(user);
-        
+
         // Set axios headers
-        api.defaults.headers.common["Authorization"] = `Bearer ${newToken}`;
-        api.defaults.headers.common["authorization"] = `Bearer ${newToken}`;
+        api.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
 
         console.log("Registration successful, token saved");
-        
-        return { 
-          success: true, 
+
+        return {
+          success: true,
           message: response.data.message,
-          data: response.data 
+          data: response.data,
         };
       } else {
         throw new Error(response.data.message || "Registration failed");
       }
     } catch (error) {
       console.error("Registration error:", error);
-      const errorMessage = error.response?.data?.message || error.message || "Registration failed";
+      const errorMessage =
+        error.response?.data?.message || error.message || "Registration failed";
       setError(errorMessage);
-      
+
       return {
         success: false,
         message: errorMessage,
@@ -118,37 +120,37 @@ export const AuthProvider = ({ children }) => {
     try {
       setLoading(true);
       setError(null);
-      
+
       const response = await api.post("/auth/login", credentials);
-      
+
       if (response.data.success) {
         const { token: newToken, ...user } = response.data.data;
 
         // Save to localStorage
         localStorage.setItem("token", newToken);
         localStorage.setItem("user", JSON.stringify(user));
-        
+
         // Update state
         setToken(newToken);
         setUser(user);
-        
-        // Set axios headers
-        api.defaults.headers.common["Authorization"] = `Bearer ${newToken}`;
-        api.defaults.headers.common["authorization"] = `Bearer ${newToken}`;
 
-        return { 
-          success: true, 
+        // Set axios headers
+        api.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
+
+        return {
+          success: true,
           message: response.data.message,
-          data: response.data 
+          data: response.data,
         };
       } else {
         throw new Error(response.data.message || "Login failed");
       }
     } catch (error) {
       console.error("Login error:", error);
-      const errorMessage = error.response?.data?.message || error.message || "Login failed";
+      const errorMessage =
+        error.response?.data?.message || error.message || "Login failed";
       setError(errorMessage);
-      
+
       return {
         success: false,
         message: errorMessage,
@@ -161,19 +163,18 @@ export const AuthProvider = ({ children }) => {
   // Logout user
   const logout = () => {
     console.log("Logging out user");
-    
+
     // Clear localStorage
     localStorage.removeItem("token");
     localStorage.removeItem("user");
-    
+
     // Clear state
     setToken(null);
     setUser(null);
-    
+
     // Clear axios headers
-    delete api.defaults.headers.common["Authorization"];
-    delete api.defaults.headers.common["authorization"];
-    
+    delete api.defaults.headers.common['Authorization'];
+
     setError(null);
   };
 
@@ -182,37 +183,37 @@ export const AuthProvider = ({ children }) => {
     try {
       setLoading(true);
       setError(null);
-      
+
       const response = await api.put("/auth/profile", profileData);
-      
+
       if (response.data.success) {
         const { token: newToken, ...updatedUser } = response.data.data;
 
         // Update localStorage
         localStorage.setItem("token", newToken);
         localStorage.setItem("user", JSON.stringify(updatedUser));
-        
+
         // Update state
         setToken(newToken);
         setUser(updatedUser);
-        
-        // Update axios headers with new token
-        api.defaults.headers.common["Authorization"] = `Bearer ${newToken}`;
-        api.defaults.headers.common["authorization"] = `Bearer ${newToken}`;
 
-        return { 
-          success: true, 
+        // Update axios headers with new token
+        api.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
+
+        return {
+          success: true,
           message: response.data.message,
-          data: response.data 
+          data: response.data,
         };
       } else {
         throw new Error(response.data.message || "Update failed");
       }
     } catch (error) {
       console.error("Update profile error:", error);
-      const errorMessage = error.response?.data?.message || error.message || "Update failed";
+      const errorMessage =
+        error.response?.data?.message || error.message || "Update failed";
       setError(errorMessage);
-      
+
       return {
         success: false,
         message: errorMessage,
@@ -231,6 +232,14 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  // Update user profile data (for profile pic upload response)
+  const updateUserProfile = (updatedUserData) => {
+    if (updatedUserData) {
+      setUser(updatedUserData);
+      localStorage.setItem("user", JSON.stringify(updatedUserData));
+    }
+  };
+
   const value = {
     user,
     token,
@@ -240,7 +249,8 @@ export const AuthProvider = ({ children }) => {
     login,
     logout,
     updateProfile,
-    updateUserProfilePicture, // Fixed function name
+    updateUserProfilePicture,
+    updateUserProfile,
     isAuthenticated: !!token,
   };
 

@@ -4,7 +4,6 @@ import axios from "axios";
 // Create axios instance
 const api = axios.create({
   baseURL: "https://expensetracker-xssx.onrender.com/api",
-  // timeout: 15000,
   headers: {
     "Content-Type": "application/json",
   },
@@ -54,8 +53,7 @@ api.interceptors.response.use(
       localStorage.removeItem("user");
       
       // Clear axios headers
-      delete api.defaults.headers.common["Authorization"];
-      delete api.defaults.headers.common["authorization"];
+      delete api.defaults.headers.common['Authorization'];
       
       // Redirect to login
       if (window.location.pathname !== "/login" && window.location.pathname !== "/register") {

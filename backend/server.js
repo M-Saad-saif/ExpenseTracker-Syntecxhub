@@ -12,42 +12,31 @@ require("./config/cloudinary");
 connectDB();
 const app = express();
 
-// CORS Configuration - Apply BEFORE other middleware
+// CORS configuration - MUST be before body parsers
 const corsOptions = {
-  origin: function (origin, callback) {
-    const allowedOrigins = [
-      "https://expense-tracker-five-fawn.vercel.app",
-      "http://localhost:3000"
-    ];
-    
-    // Allow requests with no origin (mobile apps, Postman, curl, etc)
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
-  credentials: true,
+  origin: [
+    "http://localhost:3000",
+    "https://expensetracker-xssx.onrender.com",
+  ],
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
-  allowedHeaders: ["Content-Type", "Authorization", "Accept", "Accept-Language"],
-  exposedHeaders: ["Authorization",  "authorization", ],
-  optionsSuccessStatus: 200,
+  allowedHeaders: [
+    "Content-Type", 
+    "Authorization", 
+    "authorization",  // Add lowercase version
+    "x-requested-with"
+  ],
+  exposedHeaders: ["Authorization", "authorization"],
+  credentials: true,
   preflightContinue: false,
-  maxAge: 86400, // 24 hours
+  optionsSuccessStatus: 204
 };
 
-// Apply CORS middleware
 app.use(cors(corsOptions));
 
-// Handle preflight requests explicitly
-app.options("*", cors(corsOptions));
-app.options("*", (req, res) => {
-  res.sendStatus(200);
-});
-
-// Middleware
+// Body parsers - AFTER CORS
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
 
 // Logging middleware (only in development)
 if (process.env.NODE_ENV === "development") {
@@ -67,7 +56,9 @@ app.get("/health", (req, res) => {
   });
 });
 
-// routes
+
+
+// Routes
 app.use("/api/auth", require("./routes/authRoutes"));
 app.use("/api/expenses", require("./routes/expenseRoutes"));
 app.use("/api/incomes", require("./routes/incomeRoutes"));
@@ -77,5 +68,5 @@ app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log(`server is running at http://localhost:${PORT}`);
+  console.log(`Server running on port http://localhost:${PORT}`);
 });
