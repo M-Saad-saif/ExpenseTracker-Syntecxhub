@@ -46,6 +46,7 @@ const Login = () => {
 
   return (
     <div className="auth-page">
+       <title>Login - ExpenseTracker</title>
       <div className="auth-container">
         {/* Left Side - Branding */}
         <div className="auth-branding">
@@ -84,7 +85,7 @@ const Login = () => {
         <div className="auth-form-container">
           <div className="auth-form-wrapper">
             <div className="auth-header">
-              <h2>Sign In</h2>
+              <h2>Login</h2>
               <p>Enter your credentials to access your account</p>
             </div>
 

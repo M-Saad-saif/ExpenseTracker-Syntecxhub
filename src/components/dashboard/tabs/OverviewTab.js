@@ -22,6 +22,7 @@ const OverviewTab = ({
 
   return (
     <div className="overview">
+       <title>Overview - ExpenseTracker</title>
       <h1 className="page-title">Financial Overview</h1>
       <p className="page-subtitle">{format(new Date(), "MMMM yyyy")}</p>
 

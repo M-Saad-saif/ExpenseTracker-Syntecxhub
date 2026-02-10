@@ -79,6 +79,7 @@ const ExpensesTab = ({ expenses, fetchData }) => {
 
   return (
     <div className="expenses-section">
+       <title>Expense - ExpenseTracker</title>
       <div className="section-header">
         <h1>Manage Expenses</h1>
         <button

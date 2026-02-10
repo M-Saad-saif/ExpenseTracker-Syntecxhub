@@ -16,6 +16,7 @@ const Home = () => {
 
   return (
     <div className="home-page">
+      <title>Home - ExpenseTracker</title>
       {/* Navigation */}
       <nav className="home-nav">
         <div className="nav-container">

@@ -115,6 +115,7 @@ const ProfileTab = ({ user, updateProfile }) => {
 
   return (
     <div className="profile-section">
+       <title>Profile - ExpenseTracker</title>
       <h1>User Profile</h1>
 
       <div className="profile-card">
@@ -229,21 +230,7 @@ const ProfileTab = ({ user, updateProfile }) => {
               />
             </div>
 
-            <div className="form-group">
-              <label>New Password (leave blank to keep current)</label>
-              <input
-                type="password"
-                value={profileForm.password}
-                onChange={(e) =>
-                  setProfileForm({
-                    ...profileForm,
-                    password: e.target.value,
-                  })
-                }
-                placeholder="Enter new password"
-              />
-            </div>
-
+          
             <div className="form-actions">
               <button type="submit" className="btn-submit">
                 Save Changes
@@ -254,10 +241,9 @@ const ProfileTab = ({ user, updateProfile }) => {
                 onClick={() => {
                   setShowProfileForm(false);
                   setProfileForm({
-                    name: user?.name || "",
-                    email: user?.email || "",
-                    password: "",
-                    monthlyBudget: user?.monthlyBudget || "",
+                    name: user.name || "",
+                    email: user.email || "",
+                    monthlyBudget: user.monthlyBudget || "",
                   });
                 }}
               >

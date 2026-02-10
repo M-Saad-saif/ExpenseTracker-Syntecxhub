@@ -79,6 +79,7 @@ const IncomeTab = ({ incomes, fetchData }) => {
 
   return (
     <div className="income-section">
+       <title>Income - ExpenseTracker</title>
       <div className="section-header">
         <h1>Manage Income</h1>
         <button

@@ -91,16 +91,6 @@ const Dashboard = () => {
     }
   };
 
-  if (loading) {
-    return (
-      <div className="loading-container">
-        <div className="spinner"></div>
-        <p>Loading dashboard...</p>
-      </div>
-    );
-  }
-
-  // Add this function to handle profile picture upload
   const handleProfilePictureChange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -124,13 +114,12 @@ const Dashboard = () => {
     await uploadProfilePicture(file);
   };
 
-  // Add this function to upload to your backend
   const uploadProfilePicture = async (file) => {
     setUploadingImage(true);
 
     try {
       const formData = new FormData();
-      formData.append("profileImage", file); // Must match the field name in multer
+      formData.append("profileImage", file);
 
       const response = await api.post("/auth/uploadprofilepic", formData, {
         headers: {
@@ -144,7 +133,7 @@ const Dashboard = () => {
           updateUserProfile(response.data.user);
         }
 
-        // Clear preview after successful upload
+        // Clearign preview after successful upload
         setPreviewImage(null);
       }
     } catch (error) {
@@ -155,166 +144,180 @@ const Dashboard = () => {
       setPreviewImage(null);
     } finally {
       setUploadingImage(false);
-      // Clear the file input
       document.getElementById("profile-upload").value = "";
     }
   };
 
-  return (
-    <div className="dashboard">
-      {/* Header */}
-      <header className="dashboard-header">
-        <div className="header-content">
-          <div className="logo">
-            <FaWallet className="logo-icon " />
-            <span
-              style={{
-                color: "black",
-              }}
-            >
-              ExpenseTracker
-            </span>
-          </div>
-          <div className="header-actions">
-            <div className="user-info">
-              <FaUser />
-              <span>{capitalizeFirstLetter(user?.name)}</span>
-            </div>
-            <button onClick={logout} className="btn-logout">
-              <FaSignOutAlt /> Logout
-            </button>
-          </div>
-        </div>
-      </header>
-
-      {/* Main Content */}
-      <div className="dashboard-main">
-        <aside className="sidebar">
-          {/* Profile Section */} 
-          <div className="sidebar-profile">
-            <div className="profile-image-container">
-              <div className="profile-image-wrapper">
-                {uploadingImage ? (
-                  <div className="profile-image-loading">
-                    <FaSpinner className="spinner-icon" />
-                  </div>
-                ) : (
-                  <>
-                    <img
-                      src={
-                        previewImage ||
-                        user.profileImage ||
-                        "/default-profile.png"
-                      }
-                      alt={user.name}
-                      className="profile-image"
-                      onClick={() =>
-                        !uploadingImage &&
-                        document.getElementById("profile-upload").click()
-                      }
-                    />
-                    <div className="profile-upload-overlay">
-                      <label htmlFor="profile-upload" className="upload-label">
-                        <svg
-                          width="16"
-                          height="16"
-                          viewBox="0 0 24 24"
-                          fill="white"
-                        >
-                          <path d="M14.06 9.02l.92.92L5.92 19H5v-.92l9.06-9.06M17.66 3c-.25 0-.51.1-.7.29l-1.83 1.83 3.75 3.75 1.83-1.83c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.2-.2-.45-.29-.71-.29zm-3.6 3.19L3 17.25V21h3.75L17.81 9.94l-3.75-3.75z" />
-                        </svg>
-                      </label>
-                    </div>
-                  </>
-                )}
-              </div>
-
-              <input
-                type="file"
-                id="profile-upload"
-                accept="image/*"
-                style={{ display: "none" }}
-                onChange={handleProfilePictureChange}
-                disabled={uploadingImage}
-              />
-
-              <div className="profile-info">
-                <h3 className="profile-name">{user?.name}</h3>
-                <p className="profile-email">{user?.email}</p>
-                {uploadingImage && (
-                  <div className="uploading-text">Uploading...</div>
-                )}
-              </div>
-            </div>
-          </div>
-
-          <nav className="sidebar-nav">
-            <button
-              className={`nav-item ${activeTab === "overview" ? "active" : ""}`}
-              onClick={() => setActiveTab("overview")}
-            >
-              <FaChartPie className="nav-icon" />
-              <span>Overview</span>
-            </button>
-            <button
-              className={`nav-item ${activeTab === "expenses" ? "active" : ""}`}
-              onClick={() => setActiveTab("expenses")}
-            >
-              <FaArrowDown className="nav-icon" />
-              <span>Expenses</span>
-            </button>
-            <button
-              className={`nav-item ${activeTab === "income" ? "active" : ""}`}
-              onClick={() => setActiveTab("income")}
-            >
-              <FaArrowUp className="nav-icon" />
-              <span>Income</span>
-            </button>
-            <button
-              className={`nav-item ${activeTab === "profile" ? "active" : ""}`}
-              onClick={() => setActiveTab("profile")}
-            >
-              <FaUser className="nav-icon" />
-              <span>Profile</span>
-            </button>
-          </nav>
-
-          {/* Monthly Budget Display */}
-          <div className="sidebar-budget">
-            <div className="budget-header">
-              <FaWallet className="budget-icon" />
-              <h4>Monthly Budget</h4>
-            </div>
-            <div className="budget-amount">
-              Rs: {user?.monthlyBudget || 0}/-
-            </div>
-          </div>
-        </aside>
-
-        {/* Content Area */}
-        <main className="content">
-          {/* Render Active Tab */}
-          {activeTab === "overview" && (
-            <OverviewTab
-              monthlyIncomes={monthlyIncomes}
-              monthlyExpenses={monthlyExpenses}
-            />
-          )}
-
-          {activeTab === "expenses" && (
-            <ExpensesTab expenses={expenses} fetchData={fetchData} />
-          )}
-
-          {activeTab === "income" && (
-            <IncomeTab incomes={incomes} fetchData={fetchData} />
-          )}
-
-          {activeTab === "profile" && (
-            <ProfileTab user={user} updateProfile={updateProfile} />
-          )}
-        </main>
+  if (loading) {
+    return (
+      <div className="loading-container">
+        <div className="spinner"></div>
+        <p>Loading dashboard...</p>
       </div>
-    </div>
+    );
+  }
+
+  return (
+    <>
+      <title>Dashboard - ExpenseTracker</title>
+      <div className="dashboard">
+        {/* Header */}
+        <header className="dashboard-header">
+          <div className="header-content">
+            <div className="logo">
+              <FaWallet className="logo-icon " color="purple" />
+              <span
+                style={{
+                  color: "black",
+                }}
+              >
+                ExpenseTracker
+              </span>
+            </div>
+            <div className="header-actions">
+              <div className="user-info">
+                <FaUser />
+                <span>{capitalizeFirstLetter(user?.name)}</span>
+              </div>
+              <button onClick={logout} className="btn-logout">
+                <FaSignOutAlt /> Logout
+              </button>
+            </div>
+          </div>
+        </header>
+
+        {/* Main Content */}
+        <div className="dashboard-main">
+          <aside className="sidebar">
+            {/* Profile Section */}
+            <div className="sidebar-profile">
+              <div className="profile-image-container">
+                <div className="profile-image-wrapper">
+                  {uploadingImage ? (
+                    <div className="profile-image-loading">
+                      <FaSpinner className="spinner-icon" />
+                    </div>
+                  ) : (
+                    <>
+                      <img
+                        src={
+                          previewImage ||
+                          user.profileImage ||
+                          "/default-profile.png"
+                        }
+                        alt={user.name}
+                        className="profile-image"
+                        onClick={() =>
+                          !uploadingImage &&
+                          document.getElementById("profile-upload").click()
+                        }
+                      />
+                      <div className="profile-upload-overlay">
+                        <label
+                          htmlFor="profile-upload"
+                          className="upload-label"
+                        >
+                          <svg
+                            width="16"
+                            height="16"
+                            viewBox="0 0 24 24"
+                            fill="white"
+                          >
+                            <path d="M14.06 9.02l.92.92L5.92 19H5v-.92l9.06-9.06M17.66 3c-.25 0-.51.1-.7.29l-1.83 1.83 3.75 3.75 1.83-1.83c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.2-.2-.45-.29-.71-.29zm-3.6 3.19L3 17.25V21h3.75L17.81 9.94l-3.75-3.75z" />
+                          </svg>
+                        </label>
+                      </div>
+                    </>
+                  )}
+                </div>
+
+                <input
+                  type="file"
+                  id="profile-upload"
+                  accept="image/*"
+                  style={{ display: "none" }}
+                  onChange={handleProfilePictureChange}
+                  disabled={uploadingImage}
+                />
+
+                <div className="profile-info">
+                  <h3 className="profile-name">{user?.name}</h3>
+                  <p className="profile-email">{user?.email}</p>
+                  {uploadingImage && (
+                    <div className="uploading-text">Uploading...</div>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <nav className="sidebar-nav">
+              <button
+                className={`nav-item ${activeTab === "overview" ? "active" : ""}`}
+                onClick={() => setActiveTab("overview")}
+              >
+                <FaChartPie className="nav-icon" />
+                <span>Overview</span>
+              </button>
+              <button
+                className={`nav-item ${activeTab === "expenses" ? "active" : ""}`}
+                onClick={() => setActiveTab("expenses")}
+              >
+                <FaArrowDown className="nav-icon" />
+                <span>Expenses</span>
+              </button>
+              <button
+                className={`nav-item ${activeTab === "income" ? "active" : ""}`}
+                onClick={() => setActiveTab("income")}
+              >
+                <FaArrowUp className="nav-icon" />
+                <span>Income</span>
+              </button>
+              <button
+                className={`nav-item ${activeTab === "profile" ? "active" : ""}`}
+                onClick={() => setActiveTab("profile")}
+              >
+                <FaUser className="nav-icon" />
+                <span>Profile</span>
+              </button>
+            </nav>
+
+            {/* Monthly Budget Display */}
+            <div className="sidebar-budget">
+              <div className="budget-header">
+                <FaWallet className="budget-icon" />
+                <h4>Monthly Budget</h4>
+              </div>
+              <div className="budget-amount">
+                Rs: {user?.monthlyBudget || 0}/-
+              </div>
+            </div>
+          </aside>
+
+          {/* Content Area */}
+          <main className="content">
+            {/* Render Active Tab */}
+            {activeTab === "overview" && (
+              <OverviewTab
+                monthlyIncomes={monthlyIncomes}
+                monthlyExpenses={monthlyExpenses}
+              />
+            )}
+
+            {activeTab === "expenses" && (
+              <ExpensesTab expenses={expenses} fetchData={fetchData} />
+            )}
+
+            {activeTab === "income" && (
+              <IncomeTab incomes={incomes} fetchData={fetchData} />
+            )}
+
+            {activeTab === "profile" && (
+              <ProfileTab user={user} updateProfile={updateProfile} />
+            )}
+          </main>
+        </div>
+      </div>
+    </>
   );
 };
 

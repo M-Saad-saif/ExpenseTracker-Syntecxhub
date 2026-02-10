@@ -61,6 +61,7 @@ const Register = () => {
 
   return (
     <div className="auth-page">
+       <title>SignUp - ExpenseTracker</title>
       <div className="auth-container">
         {/* Left Side - Branding */}
         <div className="auth-branding">
@@ -173,7 +174,7 @@ const Register = () => {
               <p>
                 Already have an account?{" "}
                 <Link to="/login" className="auth-link">
-                  Sign In
+                   LogIn
                 </Link>
               </p>
             </div>
