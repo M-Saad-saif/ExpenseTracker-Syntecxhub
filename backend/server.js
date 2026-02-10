@@ -12,35 +12,20 @@ require("./config/cloudinary");
 connectDB();
 const app = express();
 
+// SIMPLE CORS CONFIGURATION
+app.use(
+  cors({
+    origin: ["https://expense-tracker-five-fawn.vercel.app", "http://localhost:3000"],
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
+    allowedHeaders: ["Content-Type", "Authorization", "Accept"],
+    exposedHeaders: ["Authorization"],
+  })
+);
+
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-const allowedOrigins = [
-  "https://expense-tracker-five-fawn.vercel.app",
-  "http://localhost:3000",
-];
-
-app.use(
-  cors({
-    origin: (origin, callback) => {
-      if (!origin) {
-        return callback(null, true);
-      }
-      if (allowedOrigins.includes(origin)) {
-        return callback(null, true);
-      }
-      return callback(new Error(`CORS blocked for origin: ${origin}`), false);
-    },
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
-    allowedHeaders: [
-      "Content-Type",
-      "Authorization",
-      "authorization",
-      "Accept",
-    ],
-  }),
-);
 
 // Logging middleware (only in development)
 if (process.env.NODE_ENV === "development") {
